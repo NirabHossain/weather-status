@@ -22,20 +22,51 @@
     <div class="container">
         <form class="col-md-6 m-auto py-5">
             <div class="input-group mb-3">
-                <input type="text" class="form-control" placeholder="Enter a location for Weather ...">
+                <input type="text" class="form-control" id="form" placeholder="Enter a location for Weather ...">
                 <div class="input-group-append">
-                    <button type="button" class="btn btn-danger">Search</button>
+                    <button type="button" class="btn btn-danger" id="search" onclick="getInfo()">Search</button>
                 </div>
             </div>
         </form>
         <div class="weather-status text-white text-center">
             <img src="https://openweathermap.org/img/wn/02d@2x.png" alt="">
-            <h1>Dhaka</h1>
-            <h3><span>38.06</span>&deg;C</h3>
-            <h1 class="lead">Clouds</h1>
+            <h1 id="city">Dhaka</h1>
+            <h3><span id="temp"></span>&deg;C, feels like <span id="feels-like"></span>&deg;C </h3>
+            <h1 class="lead" id="weather"></h1>
         </div>
     </div>
 
+    <script>
+        function rounded(num){
+            return Math.round((num-273.16)*10)/10
+        }
+        function tempCity(city="Dhaka"){
+            fetch(`https://api.openweathermap.org/data/2.5/weather?q=${city}&appid=${appid}`)
+            .then(res=>res.json())
+            .then(data=>{            
+                const temp=rounded(data.main.temp), feelsLike=rounded(data.main.feels_like), status = data.weather[0].description;
+                document.getElementById('temp').innerHTML= temp;
+                document.getElementById('weather').innerHTML= status;
+                document.getElementById('feels-like').innerHTML= feelsLike;
+            })
+        }
+        function getInfo(){
+            const city=document.getElementById('form');
+            document.getElementById('city').innerText=city.value;
+            tempCity(city.value);
+            city.value="";
+        }
+        const appid="71b5e2b31ba5afcfeeed4e49f49a280e";
+        tempCity();
+
+        
+
+    </script>
 </body>
 
-</html>
+
+<!-- 
+"277701c7e341a00a74e0e3db159cf52c" nirabapi
+"71b5e2b31ba5afcfeeed4e49f49a280e" this api
+-->
+LO</html>
